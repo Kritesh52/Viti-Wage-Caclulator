@@ -1,0 +1,109 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+    function isOwner(userId) {
+      return isVerifiedUser() && request.auth.uid == userId;
+    }
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+    
+    // Entity Schema Validators
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'displayName', 'photoURL', 'updatedAt'])
+        && data.keys().size() == 5
+        && data.uid is string && data.uid == request.auth.uid
+        && data.email is string && data.email.size() <= 256
+        && data.displayName is string && data.displayName.size() <= 128
+        && data.photoURL is string && data.photoURL.size() <= 2048
+        && data.updatedAt == request.time;
+    }
+    
+    function isValidExpense(data) {
+      return data.keys().hasAll(['id', 'name', 'amount', 'frequency', 'category', 'createdAt', 'updatedAt'])
+        && data.keys().size() == 7
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.trim().size() > 0 && data.name.size() <= 128
+        && (data.amount is int || data.amount is float) && data.amount > 0
+        && data.frequency is string && data.frequency in ['weekly', 'fortnightly', 'monthly', 'annual']
+        && data.category is string && data.category in ['housing', 'transport', 'utilities', 'food', 'loans', 'personal', 'savings']
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+    
+    function isValidIncome(data) {
+      return data.keys().hasAll(['id', 'name', 'amount', 'frequency', 'category', 'createdAt', 'updatedAt'])
+        && data.keys().size() == 7
+        && data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.trim().size() > 0 && data.name.size() <= 128
+        && (data.amount is int || data.amount is float) && data.amount > 0
+        && data.frequency is string && data.frequency in ['weekly', 'fortnightly', 'monthly', 'annual']
+        && data.category is string && data.category in ['side_hustle', 'farming', 'rental', 'dividends', 'other_income']
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+    
+    function isValidSettings(data) {
+      return data.keys().hasAll(['salary', 'frequency', 'residencyStatus', 'fnpfPercent', 'isFnpfTaxExempt', 'hoursPerWeek', 'daysPerWeek', 'updatedAt'])
+        && data.keys().size() == 8
+        && (data.salary is int || data.salary is float) && data.salary >= 0
+        && data.frequency is string && data.frequency in ['weekly', 'fortnightly', 'monthly', 'annual']
+        && data.residencyStatus is string && data.residencyStatus in ['resident', 'non-resident']
+        && (data.fnpfPercent is int || data.fnpfPercent is float) && data.fnpfPercent >= 0 && data.fnpfPercent <= 100
+        && data.isFnpfTaxExempt is bool
+        && (data.hoursPerWeek is int || data.hoursPerWeek is float) && data.hoursPerWeek >= 0 && data.hoursPerWeek <= 168
+        && (data.daysPerWeek is int || data.daysPerWeek is float) && data.daysPerWeek >= 0 && data.daysPerWeek <= 7
+        && data.updatedAt == request.time;
+    }
+
+    // User Profile matching
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming()) && incoming().email == existing().email;
+      allow delete: if false;
+
+      // Expenses Subcollection
+      match /expenses/{expenseId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(expenseId) && isValidExpense(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+        allow update: if isOwner(userId) && isValidId(expenseId) && isValidExpense(incoming()) && incoming().id == existing().id && incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time;
+        allow delete: if isOwner(userId);
+      }
+
+      // Incomes Subcollection
+      match /incomes/{incomeId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(incomeId) && isValidIncome(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
+        allow update: if isOwner(userId) && isValidId(incomeId) && isValidIncome(incoming()) && incoming().id == existing().id && incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time;
+        allow delete: if isOwner(userId);
+      }
+
+      // Settings doc
+      match /settings/calculator {
+        allow get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSettings(incoming());
+        allow update: if isOwner(userId) && isValidSettings(incoming()) && incoming().updatedAt == request.time;
+        allow delete: if false;
+      }
+    }
+  }
+}

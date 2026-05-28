@@ -1,0 +1,81 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile document",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Individual expense tracking item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "amount": { "type": "number" },
+        "frequency": { "type": "string", "enum": ["weekly", "fortnightly", "monthly", "annual"] },
+        "category": { "type": "string", "enum": ["housing", "transport", "utilities", "food", "loans", "personal", "savings"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "amount", "frequency", "category", "createdAt", "updatedAt"]
+    },
+    "Income": {
+      "title": "Income",
+      "description": "Individual alternate income stream",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "amount": { "type": "number" },
+        "frequency": { "type": "string", "enum": ["weekly", "fortnightly", "monthly", "annual"] },
+        "category": { "type": "string", "enum": ["side_hustle", "farming", "rental", "dividends", "other_income"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "amount", "frequency", "category", "createdAt", "updatedAt"]
+    },
+    "Settings": {
+      "title": "Calculator Settings",
+      "description": "Customized Fiji salary & tax parameters persistence",
+      "type": "object",
+      "properties": {
+        "salary": { "type": "number" },
+        "frequency": { "type": "string", "enum": ["weekly", "fortnightly", "monthly", "annual"] },
+        "residencyStatus": { "type": "string", "enum": ["resident", "non-resident"] },
+        "fnpfPercent": { "type": "number" },
+        "isFnpfTaxExempt": { "type": "boolean" },
+        "hoursPerWeek": { "type": "number" },
+        "daysPerWeek": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["salary", "frequency", "residencyStatus", "fnpfPercent", "isFnpfTaxExempt", "hoursPerWeek", "daysPerWeek", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Stores user profiles"
+    },
+    "/users/{userId}/expenses/{expenseId}": {
+      "schema": "Expense",
+      "description": "Collection of budget dynamic expenses"
+    },
+    "/users/{userId}/incomes/{incomeId}": {
+      "schema": "Income",
+      "description": "Collection of dynamic alternate incomes"
+    },
+    "/users/{userId}/settings/calculator": {
+      "schema": "Settings",
+      "description": "Persistent salary parameters configuration"
+    }
+  }
+}
