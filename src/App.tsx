@@ -13,7 +13,7 @@ import ExpensePlanner from './components/ExpensePlanner';
 import { calculateWages } from './utils/calculator';
 import { PayFrequency } from './types';
 import { useFirebase } from './context/FirebaseContext';
-import { Calculator, Percent, Sparkles, BookOpen, Pocket, X } from 'lucide-react';
+import { Calculator, Percent, Sparkles, BookOpen, Pocket, X, Sliders } from 'lucide-react';
 
 export default function App() {
   const { user, isLoggingIn, loginWithGoogle, logout, settings, saveSettings } = useFirebase();
@@ -27,8 +27,8 @@ export default function App() {
   const [hoursPerWeek, setHoursPerWeek] = useState<number>(40);
   const [daysPerWeek, setDaysPerWeek] = useState<number>(5);
 
-  // Active view tab for screens or mobile modes
-  const [activeTab, setActiveTab] = useState<'calculator' | 'planner' | 'brackets' | 'guides'>('calculator');
+  // Active view tab centered around specific variables (avoiding congested parallel display columns)
+  const [activeTab, setActiveTab] = useState<'inputs' | 'breakdown' | 'brackets' | 'planner' | 'guides'>('inputs');
 
   // Synchronize initial settings load from database (or guest local storage) on boot and auth events
   useEffect(() => {
@@ -154,13 +154,26 @@ export default function App() {
           </div>
         </header>
 
-        {/* Global Tab Navigation - Adapts elegantly for desktop and mobile */}
-        <div className="bg-white/5 backdrop-blur-md border-b border-white/10 p-2 shrink-0 flex items-center justify-around z-15 sticky top-0" role="tablist">
+        {/* Global Tab Navigation - Separates congested sections into unique pages to maximize visual breathing room */}
+        <div className="bg-white/5 backdrop-blur-md border-b border-white/10 p-2 shrink-0 flex items-center justify-start md:justify-center gap-1 md:gap-2 overflow-x-auto scrollbar-none z-15 sticky top-0" role="tablist">
           <button
-            onClick={() => setActiveTab('calculator')}
-            id="tab-btn-calculator"
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'calculator' || (activeTab !== 'planner' && activeTab !== 'brackets' && activeTab !== 'guides')
+            onClick={() => setActiveTab('inputs')}
+            id="tab-btn-inputs"
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              activeTab === 'inputs'
+                ? 'bg-white/10 text-teal-300 border border-white/20 shadow-md'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Sliders className="w-4 h-4" />
+            <span>Salary Inputs</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('breakdown')}
+            id="tab-btn-breakdown"
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              activeTab === 'breakdown'
                 ? 'bg-white/10 text-teal-300 border border-white/20 shadow-md'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
             }`}
@@ -170,25 +183,9 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab('planner')}
-            id="tab-btn-planner"
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'planner'
-                ? 'bg-gradient-to-r from-teal-400/20 to-emerald-500/20 text-teal-300 border border-teal-500/30 shadow-md'
-                : 'text-white/60 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <Pocket className="w-4 h-4 text-emerald-300" />
-            <span className="flex items-center gap-1">
-              <span>Expense Planner</span>
-              <span className="px-1.5 py-0.5 bg-teal-400 text-slate-950 text-[8px] font-black uppercase rounded tracking-wider leading-none">NEW</span>
-            </span>
-          </button>
-          
-          <button
             onClick={() => setActiveTab('brackets')}
             id="tab-btn-brackets"
-            className={`lg:hidden flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
               activeTab === 'brackets'
                 ? 'bg-white/10 text-teal-300 border border-white/20 shadow-md'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -199,9 +196,25 @@ export default function App() {
           </button>
 
           <button
+            onClick={() => setActiveTab('planner')}
+            id="tab-btn-planner"
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              activeTab === 'planner'
+                ? 'bg-gradient-to-r from-teal-400/20 to-emerald-500/20 text-teal-300 border border-teal-500/30'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Pocket className="w-4 h-4 text-emerald-300" />
+            <span className="flex items-center gap-1">
+              <span>Expense Planner</span>
+              <span className="px-1.5 py-0.5 bg-teal-400 text-slate-950 text-[8px] font-black uppercase rounded tracking-wider leading-none">NEW</span>
+            </span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('guides')}
             id="tab-btn-guides"
-            className={`lg:hidden flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
               activeTab === 'guides'
                 ? 'bg-white/10 text-teal-300 border border-white/20 shadow-md'
                 : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -212,56 +225,11 @@ export default function App() {
           </button>
         </div>
 
-        {/* Core display layouts */}
+        {/* Core display layout - Centered, comfortable container maximizing spacing & legibility */}
         <main className="flex-1 p-4 md:p-6 overflow-y-auto">
-          {/* 1. Desktop Multi-column Grid View */}
-          <div className="hidden lg:grid lg:grid-cols-12 lg:gap-6 items-start h-full">
-            {/* Input params left side - Left bar remains persistent across calculator & budget tabs so sliders can drive outcomes */}
-            <div className="col-span-4 space-y-6">
-              <SalaryInputCard
-                salary={salary}
-                setSalary={setSalary}
-                frequency={frequency}
-                setFrequency={setFrequency}
-                residencyStatus={residencyStatus}
-                setResidencyStatus={setResidencyStatus}
-                fnpfPercent={fnpfPercent}
-                setFnpfPercent={setFnpfPercent}
-                isFnpfTaxExempt={isFnpfTaxExempt}
-                setIsFnpfTaxExempt={setIsFnpfTaxExempt}
-                hoursPerWeek={hoursPerWeek}
-                setHoursPerWeek={setHoursPerWeek}
-                daysPerWeek={daysPerWeek}
-                setDaysPerWeek={setDaysPerWeek}
-              />
-              <FijiResources />
-            </div>
-
-            {/* If Wage Calculator display is active */}
-            {activeTab !== 'planner' ? (
-              <>
-                {/* Calculations Breakdown middle columns */}
-                <div className="col-span-5 space-y-6">
-                  <WageBreakdownTable calculation={calculation} />
-                </div>
-
-                {/* Tax Brackets allocation details right side */}
-                <div className="col-span-3 space-y-6">
-                  <TaxBracketMeter calculation={calculation} />
-                </div>
-              </>
-            ) : (
-              /* If Expense Budget view is active */
-              <div className="col-span-8">
-                <ExpensePlanner calculation={calculation} />
-              </div>
-            )}
-          </div>
-
-          {/* 2. Responsive Mobile Tab-based View */}
-          <div className="lg:hidden flex flex-col gap-4 animate-fade-in">
-            {activeTab === 'calculator' && (
-              <div className="space-y-4 text-white">
+          <div className="max-w-2xl mx-auto w-full animate-fade-in space-y-6">
+            {activeTab === 'inputs' && (
+              <div className="space-y-4">
                 <SalaryInputCard
                   salary={salary}
                   setSalary={setSalary}
@@ -278,20 +246,94 @@ export default function App() {
                   daysPerWeek={daysPerWeek}
                   setDaysPerWeek={setDaysPerWeek}
                 />
+                
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => setActiveTab('breakdown')}
+                    className="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-teal-400 to-emerald-400 hover:opacity-90 active:scale-95 text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/15 transition-all duration-200"
+                  >
+                    <span>Calculate Paycheck →</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'breakdown' && (
+              <div className="space-y-4">
                 <WageBreakdownTable calculation={calculation} />
+                
+                <div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-2">
+                  <button
+                    onClick={() => setActiveTab('inputs')}
+                    className="w-full sm:w-auto px-5 py-3 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-white/80 hover:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-200"
+                  >
+                    <span>← Adjust Inputs</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('brackets')}
+                    className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-teal-400 to-emerald-400 hover:opacity-90 active:scale-95 text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/15 transition-all duration-200"
+                  >
+                    <span>View PAYE Brackets →</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'brackets' && (
+              <div className="space-y-4">
+                <TaxBracketMeter calculation={calculation} />
+                
+                <div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-2">
+                  <button
+                    onClick={() => setActiveTab('breakdown')}
+                    className="w-full sm:w-auto px-5 py-3 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-white/80 hover:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-200"
+                  >
+                    <span>← Back to Breakdown</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('planner')}
+                    className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-teal-400 to-emerald-400 hover:opacity-90 active:scale-95 text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/15 transition-all duration-200"
+                  >
+                    <span>Go to Expense Planner →</span>
+                  </button>
+                </div>
               </div>
             )}
 
             {activeTab === 'planner' && (
-              <ExpensePlanner calculation={calculation} />
-            )}
-
-            {activeTab === 'brackets' && (
-              <TaxBracketMeter calculation={calculation} />
+              <div className="space-y-4">
+                <ExpensePlanner calculation={calculation} />
+                
+                <div className="flex flex-col sm:flex-row gap-3 justify-between items-center pt-2">
+                  <button
+                    onClick={() => setActiveTab('brackets')}
+                    className="w-full sm:w-auto px-5 py-3 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-white/80 hover:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-200"
+                  >
+                    <span>← Back to PAYE Brackets</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('guides')}
+                    className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-teal-400 to-emerald-400 hover:opacity-90 active:scale-95 text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/15 transition-all duration-200"
+                  >
+                    <span>Browse Fiji Guides →</span>
+                  </button>
+                </div>
+              </div>
             )}
 
             {activeTab === 'guides' && (
-              <FijiResources />
+              <div className="space-y-4">
+                <FijiResources />
+                
+                <div className="flex justify-start pt-2">
+                  <button
+                    onClick={() => setActiveTab('inputs')}
+                    className="w-full sm:w-auto px-5 py-3 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-white/80 hover:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-200"
+                  >
+                    <span>← Adjust Salary & Settings</span>
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </main>
