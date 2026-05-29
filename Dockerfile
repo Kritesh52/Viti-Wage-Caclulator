@@ -1,10 +1,10 @@
 # Step 1: Base image to build the React application
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package configurations and install dependencies
 COPY package*.json ./
-RUN npm ci || npm install
+RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 # Copy the rest of the application files and compile
 COPY . .
