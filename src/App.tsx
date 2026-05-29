@@ -85,22 +85,30 @@ export default function App() {
           </div>
 
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="space-y-1.5 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 bg-gradient-to-r from-teal-400 to-emerald-400 text-slate-950 text-[9px] font-black uppercase rounded-md tracking-wider shadow-sm">
-                  Fiji FJD
-                </span>
-                <span className="text-[10px] text-teal-200 font-bold uppercase tracking-widest flex items-center gap-0.5">
-                  <Sparkles className="w-3 h-3 text-teal-300 fill-teal-300 animate-pulse" />
-                  Statutory Wage Hub
-                </span>
+            <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+              <img
+                src="/src/assets/images/viti_fiji_flag_app_icon_1780029383288.png"
+                alt="Viti Wage Calculator Icon"
+                referrerPolicy="no-referrer"
+                className="w-12 h-12 rounded-xl border border-white/10 shadow-lg shadow-teal-500/5 shrink-0"
+              />
+              <div className="space-y-1 min-w-0 text-left">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 bg-gradient-to-r from-teal-400 to-emerald-400 text-slate-950 text-[9px] font-black uppercase rounded-md tracking-wider shadow-sm">
+                    Fiji FJD
+                  </span>
+                  <span className="text-[10px] text-teal-200 font-bold uppercase tracking-widest flex items-center gap-0.5">
+                    <Sparkles className="w-3 h-3 text-teal-300 fill-teal-300 animate-pulse" />
+                    Statutory Wage Hub
+                  </span>
+                </div>
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white uppercase opacity-95" id="main-title">
+                  Viti Wage Calculator
+                </h1>
+                <p className="text-xs text-white/70 leading-relaxed font-semibold hidden sm:block">
+                  Calculate Fiji PAYE income tax, customize FNPF pension savings, and plan expenses.
+                </p>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white uppercase opacity-95" id="main-title">
-                Viti Wage Calculator
-              </h1>
-              <p className="text-xs text-white/70 leading-relaxed font-semibold">
-                Calculate Fiji PAYE income tax, customize FNPF pension savings, and plan expenses.
-              </p>
             </div>
 
             {/* Auth panel */}
