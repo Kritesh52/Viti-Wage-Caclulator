@@ -1,5 +1,5 @@
 {
-  "name": "Fiji Wage Calculator",
+  "name": "Viti Wage Calculator",
   "description": "Calculate your Fiji wages, PAYE income tax, and FNPF deductions on a weekly, fortnightly, and annual basis.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
