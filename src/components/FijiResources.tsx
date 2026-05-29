@@ -101,7 +101,7 @@ export default function FijiResources() {
           <div className="space-y-0.5">
             <strong className="text-white block font-bold">What is the Employer FNPF share?</strong>
             <span className="text-white/50 text-[10px] block leading-relaxed font-semibold">
-              While you save 8% or more (the employee share), your employer must match this with a statutory min of <strong>8.0% additional contribution</strong>.
+              While you save 8% to 12% (the employee share), your employer provides a statutory <strong>10.0% FNPF contribution</strong>.
             </span>
           </div>
         </div>

@@ -66,11 +66,11 @@ export default function SalaryInputCard({
   };
 
   const incrementFnpf = () => {
-    setFnpfPercent(Math.min(100, fnpfPercent + 1));
+    setFnpfPercent(Math.min(12, fnpfPercent + 1));
   };
 
   const decrementFnpf = () => {
-    setFnpfPercent(Math.max(8, fnpfPercent - 1)); // Statutory min is usually 8%
+    setFnpfPercent(Math.max(8, fnpfPercent - 1)); // Employee statutory min is 8%
   };
 
   return (
@@ -224,18 +224,18 @@ export default function SalaryInputCard({
             id="fnpf-range"
             type="range"
             min="8"
-            max="30"
+            max="12"
             step="1"
             value={fnpfPercent}
             onChange={(e) => setFnpfPercent(parseInt(e.target.value))}
             className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-teal-400"
           />
           <div className="flex justify-between text-[9px] text-white/40 px-0.5 font-bold uppercase tracking-wider">
-            <span>8% (Law Min)</span>
-            <span>12%</span>
-            <span>15%</span>
-            <span>20%</span>
-            <span>30% (Savings)</span>
+            <span>8% (Min)</span>
+            <span>9%</span>
+            <span>10%</span>
+            <span>11%</span>
+            <span>12% (Max)</span>
           </div>
           {isFnpfTaxExempt && fnpfPercent > 0 ? (
             <span className="text-[10px] text-teal-300 font-semibold block mt-1.5 flex items-center gap-1 bg-teal-400/10 border border-teal-400/20 py-1.5 px-3 rounded-xl">

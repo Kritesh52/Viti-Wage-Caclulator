@@ -33,8 +33,8 @@ export const FIJI_NON_RESIDENT_TAX_BRACKETS = [
   { min: 1000000, max: Infinity, rate: 0.39, baseCharge: 324900, desc: "Over FJD 1,000,000" }
 ];
 
-// Standard Statutory Employer matching rate is 8%
-export const STANDARD_EMPLOYER_FNPF_RATE = 8.0;
+// Standard Statutory Employer rate is 10.0%
+export const STANDARD_EMPLOYER_FNPF_RATE = 10.0;
 
 export function calculateWages(
   inputSalary: number,
