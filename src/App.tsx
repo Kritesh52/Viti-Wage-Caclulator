@@ -87,7 +87,7 @@ export default function App() {
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-start sm:items-center gap-3.5 min-w-0">
               <img
-                src="/src/assets/images/viti_fiji_flag_app_icon_1780029383288.png"
+                src="/fiji-app-icon.png"
                 alt="Viti Wage Calculator Icon"
                 referrerPolicy="no-referrer"
                 className="w-12 h-12 rounded-xl border border-white/10 shadow-lg shadow-teal-500/5 shrink-0"
