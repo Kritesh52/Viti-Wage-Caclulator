@@ -1,0 +1,23 @@
+{
+  "short_name": "Viti Wage",
+  "name": "Viti Wage Calculator",
+  "icons": [
+    {
+      "src": "/fiji-app-icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/fiji-app-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#115e59",
+  "theme_color": "#0d9488",
+  "display": "standalone",
+  "orientation": "portrait"
+}
